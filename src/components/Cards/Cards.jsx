@@ -1,18 +1,31 @@
-import React from 'react'
+import React , {useState} from 'react'
 import {CardContent ,Grid ,Card ,Typography } from '@material-ui/core';
 import styles from './Cards.module.css';
 import CountUp from 'react-countup';
 import cx from 'classnames'
 import spinner from './spinner.svg'
+import { useEffect } from 'react';
 
 export default function Cards(props) {
+
+    const [loader, setloader] = useState(false);
+    useEffect(() => {
+        setloader(true);
+        setTimeout(() =>{
+            setloader(false);
+        },[3000])
+    }, [])
+
     const {confirmed , deaths , lastUpdate} = props.data;
     if(!confirmed){
-        return <img src={spinner} alt="Loading" />;
+        return '';
     }
     return (
         <div className={styles.container}>
-            <Grid container spacing={3} justifyContent='center'>
+            {
+                loader ? 
+                <img src={spinner} alt="Loading" />
+                : <Grid container spacing={3} justifyContent='center'>
                 <Grid item component={Card} xs={12} md={3} className={cx(styles.card , styles.infected)}>
                     <CardContent>
                         <Typography color="textSecondary" gutterBottom>Infected</Typography>
@@ -61,6 +74,7 @@ export default function Cards(props) {
                     </CardContent>
                 </Grid>
             </Grid>
+            }
         </div>
     )
 }
